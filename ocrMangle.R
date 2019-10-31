@@ -15,7 +15,7 @@ tesseract_download("deu")  # German
 
 
 # get list of JPG & JPEG image files
-imagelist <- list.files(path = "images/", pattern = ".jp")
+imagelist <- list.files(path = "images/", pattern = ".jp|.JP")
 
 
 # setup table for OCRed text
@@ -58,4 +58,5 @@ write.csv(ocrText,
           paste0("ocrText-",
                  gsub("\\s+|:", "", Sys.time()),
                  ".csv"),
+          na = "",
           row.names = F)
