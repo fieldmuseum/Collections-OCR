@@ -9,11 +9,11 @@ Make sure to install these libraries first:
 
 ## How to run the script:
 Notes:
-- This takes ~2 seconds per label-image.
+- This can takes over 10 seconds per label-image.
   - Be mindful how many images you add to your "images" directory.
-  - Batch similar images together to facilitate the follow-up cleaning.
 - This currently uses Tesseract's English ("eng"), German ("deu"), and Latin ("lat") libraries. 
-- Output is likely needs some [or many] follow-up/clean-up steps.
+- Output likely needs some [or many] follow-up/clean-up steps.
+  - Batch similar images together to streamline follow-up steps.
 
 To run the script:
 1. Add a folder named "images" to this script's directory
