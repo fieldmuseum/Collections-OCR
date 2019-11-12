@@ -3,7 +3,7 @@
 # (c) 2019 The Field Museum - MIT License (https://opensource.org/licenses/MIT)
 # https://github.com/fieldmuseum/Collections-OCR
 
-
+library(tidyr)
 library(magick)
 library(stringr)
 library(tesseract)
@@ -52,6 +52,7 @@ ocrText <- separate(imagesOCR, text,
                     # into = seq(1:20),  # if need consistent NCOL
                     sep = "\n",
                     extra = "merge", fill = "right")
+
 
 # export CSV
 write.csv(ocrText, 
