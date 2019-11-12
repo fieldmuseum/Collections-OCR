@@ -37,7 +37,7 @@ for (i in 1:NROW(imagelist)) {
   
   # include filename & count of lines in row
   imagesOCR$image[i] <- imagelist[i]
-  imagesOCR$line_count[i] <- str_count(ocrText, "\n")
+  imagesOCR$line_count[i] <- str_count(ocrText, "\n+")
   
   # show progress
   print(paste(i, " - ", Sys.time()))
@@ -50,7 +50,7 @@ ocrText <- separate(imagesOCR, text,
                     into = paste0("Line", 
                                   seq(1:max(imagesOCR$line_count, na.rm = T))),
                     # into = seq(1:20),  # if need consistent NCOL
-                    sep = "\n",
+                    sep = "(\n)+",
                     extra = "merge", fill = "right")
 
 
