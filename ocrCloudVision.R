@@ -9,7 +9,7 @@ library(googleCloudVisionR)  # NOTE - requires API Key / Service Account
 library(tidyr)
 library(readr)
 library(stringr)
-library(magick)
+# library(magick)
 
 # get list of local JPG & JPEG image files [REVERT]
 imagelist <- list.files(path = "images/", pattern = ".jp|.JP")
