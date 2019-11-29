@@ -1,6 +1,6 @@
 # A script to use Google Cloud Vision to OCR/parse/mangle Collections label-images
 # Note!
-#   - this may take a few seconds per label-image
+#   - this may take >30 seconds per label-image
 #   - running >1000 API calls/month incurs a fee
 # (c) 2019 The Field Museum - MIT License (https://opensource.org/licenses/MIT)
 # https://github.com/fieldmuseum/Collections-OCR
@@ -24,6 +24,9 @@ imagenames <- gsub(".jp.*|.JP.*", "", imagelist)
 
 # Setup table for OCRed text
 imagesOCR <- data.frame("image" = rep("", NROW(imagelist)),
+                        "imagesize_MB" = rep("", NROW(imagelist)),
+                        "ocr_start" = rep("", NROW(imagelist)),
+                        "ocr_duration" = rep("", NROW(imagelist)),
                         "line_count" = rep("", NROW(imagelist)),
                         "text" = rep("", NROW(imagelist)),
                         stringsAsFactors = F)
@@ -35,8 +38,9 @@ imagesOCR$line_count <- as.integer(imagesOCR$line_count)
 # # add image_dir if use prompt above
 if (!dir.exists("ocr_text")) {  # paste0(image_dir, "_out")
   dir.create("ocr_text")  # paste0(image_dir, "_out")
+  print("output directory created")
 } else {
-  print("output directory exists")
+  print("output directory already exists")
 }
 
 
@@ -52,21 +56,33 @@ for (i in 1:NROW(imagelist)) {
   #               quality = 80)
 
   # OCR image
-  # CHECK/FIX THIS FXN ####
+  # ### NOTE! This can take over ~30s per image
+  print(paste(i, "- starting OCR -", Sys.time()))
+  
+  imagesOCR$ocr_start[i] <- as.character(Sys.time())
+  start <- Sys.time()
+  
   ocr_list <- gcv_get_image_annotations(imagePaths = paste0("images/", imagelist[i]),
-                                        feature = "DOCUMENT_TEXT_DETECTION",
-                                        savePath = paste0("ocr_text/", 
-                                                          imagenames[i], "_text.csv"))
+                                        feature = "DOCUMENT_TEXT_DETECTION") #,
+                                        # savePath = paste0("ocr_text/", 
+                                        #                   imagenames[i], "_text.csv"))
+  
+  print(paste(i, "- finishing OCR -", Sys.time()))
+  end <- Sys.time()
   
   # Add raw text to dataframe
-  imagesOCR$text[i] <- read_file(ocr_list$local_path)  # CHECK/FIX THIS PATH ####
+  imagesOCR$text[i] <- ocr_list$description
   
-  # Add filename & count of lines in row
+  # Add OCR duration (in seconds), & text-lines per image, filename, filesize (in MB)
+  imagesOCR$ocr_duration[i] <- as.integer(end) - as.integer(start)
+  imagesOCR$line_count[i] <- str_count(ocr_list$description, "\n+")
   imagesOCR$image[i] <- imagelist[i]
-  imagesOCR$line_count[i] <- str_count(ocr_list$local_path, "\n+")
+  imagesOCR$imagesize_MB[i] <- round(file.info(paste0("images/",
+                                                      imagelist[i]))$size
+                                     / 1000000, 2)
   
   # show progress
-  print(paste(i, " - ", Sys.time()))
+  print(paste(i, "- done -", Sys.time()))
   
   # rate limit to max of 240/min (Vision API limit = 1800/min)
   Sys.sleep(0.25)
