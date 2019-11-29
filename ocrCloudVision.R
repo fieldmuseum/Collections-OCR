@@ -23,9 +23,9 @@ imagenames <- gsub(".jp.*|.JP.*", "", imagelist)
 # Retrieve OCR text ####
 
 # Setup table for OCRed text
-imagesOCR <- data.frame("image" = rep("", NROW(textlist)),
-                        "line_count" = rep("", NROW(textlist)),
-                        "text" = rep("", NROW(textlist)),
+imagesOCR <- data.frame("image" = rep("", NROW(imagelist)),
+                        "line_count" = rep("", NROW(imagelist)),
+                        "text" = rep("", NROW(imagelist)),
                         stringsAsFactors = F)
 
 imagesOCR$line_count <- as.integer(imagesOCR$line_count)
