@@ -1,4 +1,8 @@
 # Collections-OCR
+
+This repo is archived as of March 2023. The project is not active and the GoogleCloud API + `cloudyr` R-wrapper has since changed.
+For more information contact Todd Widhelm
+
 A few scripts that batches of collections label-images through OCR
 
 ## Google Cloud Vision API & `ocrCloudVision.R`
